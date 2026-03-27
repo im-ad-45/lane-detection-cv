@@ -1,0 +1,18 @@
+Lane Detection - Processing Summary
+========================================
+
+Images processed: 6
+Videos processed: 3
+
+Processed files:
+  [IMAGE] solidWhiteCurve.jpg
+  [IMAGE] solidWhiteRight.jpg
+  [IMAGE] solidYellowCurve.jpg
+  [IMAGE] solidYellowCurve2.jpg
+  [IMAGE] solidYellowLeft.jpg
+  [IMAGE] whiteCarLaneSwitch.jpg
+  [VIDEO] challenge.mp4
+  [VIDEO] solidWhiteRight.mp4
+  [VIDEO] solidYellowLeft.mp4
+
+All outputs saved to output_images/ and output_videos/

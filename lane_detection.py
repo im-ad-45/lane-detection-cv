@@ -71,13 +71,9 @@ def get_departure_warning(frame, left_line, right_line):
 
 
 def draw_harris_corners(frame, gray):
-    # Harris needs float32 input
     gray_float = np.float32(gray)
-    # blockSize=2: neighbourhood size, ksize=3: Sobel aperture, k=0.04: Harris detector free parameter
     corners = cv2.cornerHarris(gray_float, blockSize=2, ksize=3, k=0.04)
-    # dilate to make corner points more visible
     corners = cv2.dilate(corners, None)
-    # threshold: only keep strong corners (top 1% response)
     frame[corners > 0.01 * corners.max()] = [0, 0, 255]
     return frame
 
@@ -86,16 +82,13 @@ def draw_optical_flow(frame, prev_gray, curr_gray, prev_points):
     if prev_points is None or len(prev_points) == 0:
         return frame, prev_points
 
-    # Lucas-Kanade optical flow — tracks prev_points into the new frame
     curr_points, status, _ = cv2.calcOpticalFlowPyrLK(
         prev_gray, curr_gray, prev_points, None
     )
 
-    # status=1 means the point was successfully tracked
     good_prev = prev_points[status == 1]
     good_curr = curr_points[status == 1]
 
-    # draw arrows from old position to new position
     for p0, p1 in zip(good_prev, good_curr):
         x0, y0 = p0.ravel().astype(int)
         x1, y1 = p1.ravel().astype(int)
@@ -125,7 +118,6 @@ def draw_hud(frame, warning, warning_color, confidence, fps=None):
 
 
 def process_frame(frame, fps=None, prev_gray=None, prev_points=None):
-    # HLS masking for white and yellow lanes
     hls = cv2.cvtColor(frame, cv2.COLOR_BGR2HLS)
     white_mask = cv2.inRange(hls, (0, 200, 0), (255, 255, 255))
     yellow_mask = cv2.inRange(hls, (15, 100, 100), (35, 255, 255))
@@ -150,16 +142,13 @@ def process_frame(frame, fps=None, prev_gray=None, prev_points=None):
     line_count = len(lines) if lines is not None else 0
     confidence = min(int((line_count / 20) * 100), 100)
 
-    # build result frame
     result = draw_lane_fill(frame, left_line, right_line)
     line_image = draw_lines_on_frame(result, left_line, right_line)
     result = cv2.addWeighted(result, 0.8, line_image, 1, 0)
 
-    # Harris corners on the full grayscale (not masked) — more corners visible
     full_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     result = draw_harris_corners(result, full_gray)
 
-    # Optical flow (only for video — needs previous frame)
     curr_points = None
     if prev_gray is not None and prev_points is not None:
         result, curr_points = draw_optical_flow(result, prev_gray, full_gray, prev_points)
@@ -171,17 +160,14 @@ def process_frame(frame, fps=None, prev_gray=None, prev_points=None):
 
 
 def get_initial_points(gray):
-    # Shi-Tomasi corner points — good starting points to track with optical flow
     points = cv2.goodFeaturesToTrack(gray, maxCorners=100,
                                      qualityLevel=0.3, minDistance=7)
     return points
 
 
-# --- setup output folders ---
 os.makedirs("output_images", exist_ok=True)
 os.makedirs("output_videos", exist_ok=True)
 
-# --- process all images ---
 for filename in os.listdir("test_images"):
     if filename.endswith((".jpg", ".png")):
         img = cv2.imread(f"test_images/{filename}")
@@ -190,7 +176,6 @@ for filename in os.listdir("test_images"):
         cv2.imwrite(f"output_images/{filename}", output)
         print(f"Saved output_images/{filename}")
 
-# --- process all videos ---
 for filename in os.listdir("test_videos"):
     if filename.endswith((".mp4", ".avi")):
         cap = cv2.VideoCapture(f"test_videos/{filename}")
@@ -218,7 +203,6 @@ for filename in os.listdir("test_videos"):
                 frame, fps, prev_gray, prev_points
             )
 
-            # refresh tracking points every 30 frames or when lost
             if prev_points is None or curr_points is None or len(curr_points) < 10:
                 prev_points = get_initial_points(curr_gray)
             else:
@@ -231,4 +215,20 @@ for filename in os.listdir("test_videos"):
         out.release()
         print(f"Saved output_videos/{filename}")
 
+image_files = [f for f in os.listdir("test_images") if f.endswith((".jpg", ".png"))]
+video_files = [f for f in os.listdir("test_videos") if f.endswith((".mp4", ".avi"))]
+
+with open("results.txt", "w") as f:
+    f.write("Lane Detection - Processing Summary\n")
+    f.write("=" * 40 + "\n\n")
+    f.write(f"Images processed: {len(image_files)}\n")
+    f.write(f"Videos processed: {len(video_files)}\n\n")
+    f.write("Processed files:\n")
+    for file in image_files:
+        f.write(f"  [IMAGE] {file}\n")
+    for file in video_files:
+        f.write(f"  [VIDEO] {file}\n")
+    f.write("\nAll outputs saved to output_images/ and output_videos/\n")
+
 print("All done!")
+print("Summary saved to results.txt")
