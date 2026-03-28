@@ -46,6 +46,11 @@ lane-detection-cv/
 
 ---
 
+## Output Log
+After every run, a `results.txt` file is generated in the project root summarising how many images and videos were processed and listing all output files.
+
+---
+
 ## Dataset
 The test images and videos used in this project are the ones found in the.
 UDacity CarND Lane Lines Project (https://github.com/udacity/CarND-LaneLines-P1).
