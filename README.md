@@ -113,7 +113,7 @@ linear regression of them into full lane lines using numpy polyfit.
 6. **Harris Corner Detection** - detects corner features on the entire frame.
 with a 2x2 neighbourhood and k=0.04, and Module 3 feature extraction is covered.
 
-7. **Optical Flow (Lucas-Kanade) -tracks detected corners between successive.
+7. **Optical Flow (Lucas-Kanade)** -tracks detected corners between successive.
 Movement analysis of video with pyramidal LK method, including Module 4.
 motion analysis. The refresh rate of points is 30 frames or loss of tracking.
 
@@ -126,14 +126,6 @@ on a semi-transparent bar at the head of each frame.
 
 ---
 
-## Syllabus Coverage (CSE3010)
-| Module | Topic | Implementation |
-|--------|-------|----------------|
-| Module 1 | Image filtering, histogram processing | Gaussian blur, HLS color masking |
-| Module 3 | Canny edge detection, Hough Transform, Harris Corner Detection | `cv2.Canny`, `cv2.HoughLinesP`, `cv2.cornerHarris` |
-| Module 4 | Optical flow, motion analysis | `cv2.calcOpticalFlowPyrLK`, `cv2.goodFeaturesToTrack` |
----
-
 ## Limitations
 - The Hough Transform presupposes straight lanes - the algorithm cannot work on sharp curves.
 - Lane lines are brought to the vanishing point, and they seem to intersect at.
@@ -144,7 +136,3 @@ trees and sky, as it is driven on the full frame instead of the ROI.
 - Optical flow cannot work on still images but only on video output.
 
 ---
-
-## Course
-CSE3010 — Computer Vision
-VIT Bhopal University
