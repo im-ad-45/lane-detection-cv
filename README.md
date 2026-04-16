@@ -1,6 +1,5 @@
 # Lane Detection System
-A lane detector system in real-time that was constructed using classical computer vision.
-as a course of CSE3010 Computer Vision. Dashcam footage is processed by the system.
+A lane detector system in real-time that was constructed using classical computer vision. Dashcam footage is processed by the system.
 to identify lane markings, visualize driving space, trace road characteristics and
 alarm lane departure to the driver.
 
@@ -111,9 +110,9 @@ processing to the road space in front of it, removing the sky and scenery.
 linear regression of them into full lane lines using numpy polyfit.
 
 6. **Harris Corner Detection** - detects corner features on the entire frame.
-with a 2x2 neighbourhood and k=0.04, and Module 3 feature extraction is covered.
+with a 2x2 neighbourhood and k=0.04.
 
-7. **Optical Flow (Lucas-Kanade)** -tracks detected corners between successive.
+7. **Optical Flow (Lucas-Kanade)** - tracks detected corners between successive.
 Movement analysis of video with pyramidal LK method, including Module 4.
 motion analysis. The refresh rate of points is 30 frames or loss of tracking.
 
